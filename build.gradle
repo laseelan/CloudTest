@@ -1,0 +1,53 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('se.transmode.gradle:gradle-docker:1.2')
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'docker'
+
+jar {
+	baseName = 'cloudtest'
+	version = 'v1.0'
+}
+
+bootRepackage {
+    mainClass = 'com.fisc.cloud.CloudTestApplication'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'laseelan'
+
+task buildDocker(type: Docker, dependsOn: build) {
+  push = true
+  applicationName = jar.baseName
+  tagVersion = 'v1.0'
+  dockerfile = file('Dockerfile')
+  doFirst {
+    copy {
+      from jar
+      into stageDir
+    }
+  }
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-web')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
