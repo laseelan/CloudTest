@@ -17,7 +17,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'docker'
 
 jar {
-	baseName = 'cloudtest'
+	baseName = 'cloudtest.arm'
 	version = 'v1.0'
 }
 
